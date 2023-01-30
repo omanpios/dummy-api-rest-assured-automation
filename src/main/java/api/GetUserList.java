@@ -12,8 +12,7 @@ public class GetUserList {
                 .get("https://dummyapi.io/data/v1/user");
     }
 
-    public String response() {
-        String responseBody = response.asPrettyString();
-        return responseBody;
+    public Response response() {
+        return response;
     }
 }
