@@ -1,6 +1,6 @@
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 
 import java.io.File;
 
