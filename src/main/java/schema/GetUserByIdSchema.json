@@ -69,5 +69,6 @@
     "location",
     "registerDate",
     "updatedDate"
-  ]
+  ],
+  "additionalProperties": false
 }

@@ -26,7 +26,18 @@ public class GetUserByIdTests {
                 .header("app-id", "63d1caa3480870720572222")
                 .get("https://dummyapi.io/data/v1/user/" + userId)
                 .then()
-                .statusCode(403);
+                .statusCode(403)
+                .body(JsonSchemaValidator.matchesJsonSchema(new File("src/main/java/schema/ErrorMessageSchema.json")));
+    }
+
+    @Test
+    void verifyThatANonExistentUserIdReturnsA400StatusCode() {
+        given()
+                .header("app-id", "63d1caa3480870720570afb7")
+                .get("https://dummyapi.io/data/v1/user/" + "nonexistentuserid")
+                .then()
+                .statusCode(400)
+                .body(JsonSchemaValidator.matchesJsonSchema(new File("src/main/java/schema/ErrorMessageSchema.json")));
     }
 
     @Test

@@ -35,5 +35,6 @@
       "type": "integer"
     }
   },
-  "required": ["data", "total", "page", "limit"]
+  "required": ["data", "total", "page", "limit"],
+  "additionalProperties": false
 }
