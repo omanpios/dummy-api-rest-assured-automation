@@ -1,6 +1,6 @@
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
-import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.*;
 
 import java.io.File;
 
@@ -31,7 +31,8 @@ public class GetUserListTests {
         given()
                 .header("app-id", "63d1caa3480870720572222")
                 .get("https://dummyapi.io/data/v1/user")
-                .then().statusCode(403);
+                .then().statusCode(403)
+                .body(JsonSchemaValidator.matchesJsonSchema(new File("src/main/java/schema/ErrorMessageSchema.json")));
     }
 
     @Test
