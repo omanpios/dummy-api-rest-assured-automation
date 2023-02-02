@@ -3,6 +3,9 @@
   "properties": {
     "error": {
       "type": "string"
+    },
+    "data": {
+      "type": "object"
     }
   },
   "required": ["error"],
