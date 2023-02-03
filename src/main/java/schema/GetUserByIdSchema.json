@@ -58,15 +58,9 @@
   },
   "required": [
     "id",
-    "title",
     "firstName",
     "lastName",
-    "picture",
-    "gender",
     "email",
-    "dateOfBirth",
-    "phone",
-    "location",
     "registerDate",
     "updatedDate"
   ],

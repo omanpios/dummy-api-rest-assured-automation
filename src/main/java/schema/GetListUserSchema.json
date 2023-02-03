@@ -22,7 +22,7 @@
             "type": "string"
           }
         },
-        "required": ["id", "title", "firstName", "lastName", "picture"]
+        "required": ["id", "firstName", "lastName"]
       }
     },
     "total": {
