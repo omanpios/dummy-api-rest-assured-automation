@@ -18,14 +18,14 @@ public class CreateUserTests {
 
         @Test
         void verifyThatASuccessfulRequestBasicDataReturnsA200StatusCode() {
-                given().log().all()
+                given()
                                 .header("app-id", "63d1caa3480870720570afb7")
                                 .header("Content-Type", "application/json")
                                 .body("{\n\"lastName\":\"" + fake.name().lastName()
                                                 + "\",\n\"firstName\":\"" + fake.name().firstName()
                                                 + "\",\n\"email\":\"" + fake.internet().safeEmailAddress() + "\"\n}")
                                 .post("https://dummyapi.io/data/v1/user/create")
-                                .then().log().all()
+                                .then()
                                 .statusCode(200)
                                 .body(JsonSchemaValidator.matchesJsonSchema(
                                                 new File("src/main/java/schema/GetUserByIdSchema.json")));
@@ -44,7 +44,7 @@ public class CreateUserTests {
                 int randomItemFromGender = random.nextInt(gender.size());
                 String randomGender = gender.get(randomItemFromGender);
 
-                given().log().all()
+                given()
                                 .header("app-id", "63d1caa3480870720570afb7")
                                 .header("Content-Type", "application/json")
                                 .body("{\n\"lastName\":\"" + fake.name().lastName()
@@ -62,7 +62,7 @@ public class CreateUserTests {
                                                 + "\"},\n\"phone\":\""
                                                 + fake.phoneNumber().cellPhone() + "\"\n}")
                                 .post("https://dummyapi.io/data/v1/user/create")
-                                .then().log().all()
+                                .then()
                                 .statusCode(200)
                                 .body(JsonSchemaValidator.matchesJsonSchema(
                                                 new File("src/main/java/schema/GetUserByIdSchema.json")));
@@ -70,14 +70,14 @@ public class CreateUserTests {
 
         @Test
         void verifyThatARequestWithAnExistentEmailAddressReturnsA400StatusCode() {
-                given().log().all()
+                given()
                                 .header("app-id", "63d1caa3480870720570afb7")
                                 .header("Content-Type", "application/json")
                                 .body("{\n\"lastName\":\"" + fake.name().lastName()
                                                 + "\",\n\"firstName\":\"" + fake.name().firstName()
                                                 + "\",\n\"email\":\"lance.foster@example.com\"\n}")
                                 .post("https://dummyapi.io/data/v1/user/create")
-                                .then().log().all()
+                                .then()
                                 .statusCode(400)
                                 .body(JsonSchemaValidator.matchesJsonSchema(
                                                 new File("src/main/java/schema/ErrorMessageSchema.json")));
@@ -85,12 +85,12 @@ public class CreateUserTests {
 
         @Test
         void verifyThatAnInvalidRequestReturnsA400StatusCode() {
-                given().log().all()
+                given()
                                 .header("app-id", "63d1caa3480870720570afb7")
                                 .header("Content-Type", "application/json")
                                 .body("{\n\"lastName\":\"D\",\n\"firstName\":\"C\",\n\"email\":\"lance.foster\"\n}")
                                 .post("https://dummyapi.io/data/v1/user/create")
-                                .then().log().all()
+                                .then()
                                 .statusCode(400)
                                 .body(JsonSchemaValidator.matchesJsonSchema(
                                                 new File("src/main/java/schema/ErrorMessageSchema.json")));
