@@ -7,9 +7,11 @@ import api.GetUserList;
 import io.restassured.module.jsv.JsonSchemaValidator;
 
 public class GetUserByIdTests {
+    String appId = "63d1caa3480870720570afb7";
+
     @Test
     void verifyThatASuccessfulRequestReturnsA200StatusCode() {
-        GetUserList getUserList = new GetUserList(0, 5);
+        GetUserList getUserList = new GetUserList(null, null, appId);
         String userId = getUserList.response().getBody().path("data[0].id");
         given()
                 .header("app-id", "63d1caa3480870720570afb7")
@@ -20,7 +22,7 @@ public class GetUserByIdTests {
 
     @Test
     void verifyThatAnInvalidAuthenticationReturnsA403StatusCode() {
-        GetUserList getUserList = new GetUserList(0, 5);
+        GetUserList getUserList = new GetUserList(null, null, appId);
         String userId = getUserList.response().getBody().path("data[0].id");
         given()
                 .header("app-id", "63d1caa3480870720572222")
@@ -42,7 +44,7 @@ public class GetUserByIdTests {
 
     @Test
     void verifyThatTheResponseBodyMatchesTheJsonSchema() {
-        GetUserList getUserList = new GetUserList(0, 5);
+        GetUserList getUserList = new GetUserList(null, null, appId);
         String userId = getUserList.response().getBody().path("data[0].id");
         given()
                 .header("app-id", "63d1caa3480870720570afb7")

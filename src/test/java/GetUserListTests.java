@@ -1,46 +1,46 @@
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
-import static io.restassured.RestAssured.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
-
 import api.GetUserList;
 import io.restassured.module.jsv.JsonSchemaValidator;
 
 public class GetUserListTests {
     SoftAssertions softly = new SoftAssertions();
+    String appId = "63d1caa3480870720570afb7";
 
     @Test
     void verifyThatASuccessfulRequestReturnsA200StatusCode() {
-        GetUserList getUserList = new GetUserList(1, 10);
-        softly.assertThat(getUserList.response().statusCode()).isEqualTo(200);
+        GetUserList getUserList = new GetUserList(null, null, appId);
+        softly.assertThat(getUserList.response().statusCode()).as("Status code").isEqualTo(200);
         softly.assertAll();
     }
 
     @Test
     void verifyThatTheApiImplementsPagination() {
-        GetUserList getUserList = new GetUserList(0, 20);
-        softly.assertThat(getUserList.response().getBody().path("limit").toString()).isEqualTo("20");
-        softly.assertThat(getUserList.response().getBody().path("total").toString()).isNotEmpty();
-        softly.assertThat(getUserList.response().getBody().path("page").toString()).isNotEmpty();
+        GetUserList getUserList = new GetUserList(null, null, appId);
+        softly.assertThat(getUserList.userResponse().getLimit()).as("Limit").isEqualTo(20);
+        softly.assertThat(getUserList.userResponse().getTotal()).as("Total").isGreaterThan(100);
+        softly.assertThat(getUserList.userResponse().getPage()).as("Page").isEqualTo(0);
         softly.assertAll();
     }
 
     @Test
     void verifyThatAnInvalidAuthenticationReturnsA403StatusCode() {
-        given()
-                .header("app-id", "63d1caa3480870720572222")
-                .get("https://dummyapi.io/data/v1/user")
-                .then().statusCode(403)
-                .body(JsonSchemaValidator.matchesJsonSchema(new File("src/main/java/schema/ErrorMessageSchema.json")));
+        File errorMessageSchema = new File("src/main/java/schema/ErrorMessageSchema.json");
+        GetUserList getUserList = new GetUserList(null, null, "63d1caa34808707205700000");
+        softly.assertThat(getUserList.response().statusCode()).as("Status code").isEqualTo(403);
+        softly.assertAll();
+        assertThat(getUserList.response().getBody().asString(), JsonSchemaValidator.matchesJsonSchema(errorMessageSchema));
     }
 
     @Test
     void verifyThatTheResponseBodyMatchesTheJsonSchema() {
-        given()
-                .header("app-id", "63d1caa3480870720570afb7")
-                .get("https://dummyapi.io/data/v1/user")
-                .then()
-                .body(JsonSchemaValidator.matchesJsonSchema(new File("src/main/java/schema/GetListUserSchema.json")));
+        File userListSchema = new File("src/main/java/schema/GetListUserSchema.json");
+        GetUserList getUserList = new GetUserList(null, null, appId);
+        softly.assertThat(getUserList.response().statusCode()).as("Status code").isEqualTo(200);
+        softly.assertAll();
+        assertThat(getUserList.response().getBody().asString(), JsonSchemaValidator.matchesJsonSchema(userListSchema));
     }
 }
