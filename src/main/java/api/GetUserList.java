@@ -4,6 +4,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 import pojo.UserListResponse;
+import pojo.Error;
 
 import static io.restassured.RestAssured.*;
 
@@ -35,5 +36,9 @@ public class GetUserList {
 
     public Response response() {
         return response;
+    }
+
+    public Error error() {
+        return response.getBody().as(Error.class);
     }
 }
