@@ -20,9 +20,9 @@ public class GetUserListTests {
     @Test
     void verifyThatTheApiImplementsPagination() {
         GetUserList getUserList = new GetUserList(null, null, appId);
-        softly.assertThat(getUserList.userResponse().getLimit()).as("Limit").isEqualTo(20);
-        softly.assertThat(getUserList.userResponse().getTotal()).as("Total").isGreaterThan(100);
-        softly.assertThat(getUserList.userResponse().getPage()).as("Page").isEqualTo(0);
+        softly.assertThat(getUserList.userListResponse().getLimit()).as("Limit").isEqualTo(20);
+        softly.assertThat(getUserList.userListResponse().getTotal()).as("Total").isGreaterThan(100);
+        softly.assertThat(getUserList.userListResponse().getPage()).as("Page").isEqualTo(0);
         softly.assertAll();
     }
 
