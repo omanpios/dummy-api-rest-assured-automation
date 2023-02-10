@@ -29,7 +29,7 @@ public class GetUserList {
                 .response();
     }
 
-    public UserListResponse userResponse() {
+    public UserListResponse userListResponse() {
         return response.getBody().as(UserListResponse.class);
     }
 
