@@ -31,6 +31,7 @@ public class GetUserListTests {
         File errorMessageSchema = new File("src/main/java/schema/ErrorMessageSchema.json");
         GetUserList getUserList = new GetUserList(null, null, "63d1caa34808707205700000");
         softly.assertThat(getUserList.response().statusCode()).as("Status code").isEqualTo(403);
+        softly.assertThat(getUserList.error().getError()).as("Validation error").isEqualTo("APP_ID_NOT_EXIST");
         softly.assertAll();
         assertThat(getUserList.response().getBody().asString(), JsonSchemaValidator.matchesJsonSchema(errorMessageSchema));
     }
