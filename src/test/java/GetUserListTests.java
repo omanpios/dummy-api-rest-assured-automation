@@ -20,9 +20,9 @@ public class GetUserListTests {
     @Test
     void verifyThatTheApiImplementsPagination() {
         GetUserList getUserList = new GetUserList(null, null, appId);
-        softly.assertThat(getUserList.userResponse().getLimit()).as("Limit").isEqualTo(20);
-        softly.assertThat(getUserList.userResponse().getTotal()).as("Total").isGreaterThan(100);
-        softly.assertThat(getUserList.userResponse().getPage()).as("Page").isEqualTo(0);
+        softly.assertThat(getUserList.userListResponse().getLimit()).as("Limit").isEqualTo(20);
+        softly.assertThat(getUserList.userListResponse().getTotal()).as("Total").isGreaterThan(100);
+        softly.assertThat(getUserList.userListResponse().getPage()).as("Page").isEqualTo(0);
         softly.assertAll();
     }
 
@@ -31,6 +31,7 @@ public class GetUserListTests {
         File errorMessageSchema = new File("src/main/java/schema/ErrorMessageSchema.json");
         GetUserList getUserList = new GetUserList(null, null, "63d1caa34808707205700000");
         softly.assertThat(getUserList.response().statusCode()).as("Status code").isEqualTo(403);
+        softly.assertThat(getUserList.error().getError()).as("Validation error").isEqualTo("APP_ID_NOT_EXIST");
         softly.assertAll();
         assertThat(getUserList.response().getBody().asString(), JsonSchemaValidator.matchesJsonSchema(errorMessageSchema));
     }
