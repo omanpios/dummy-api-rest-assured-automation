@@ -11,12 +11,13 @@ public class CreateUser {
     Response response;
     private final String baseUri = "https://dummyapi.io/data/v1";
 
-    public CreateUser(String appId) {
+    public CreateUser(String appId, Object body) {
         RequestSpecification request = given().log().all()
                 .baseUri(baseUri)
-                .header("app-id", appId);
+                .header("app-id", appId)
+                .body(body);
 
-        response = when()
+        response = request.when()
                 .post("/user/create")
                 .then().log().all()
                 .extract()
