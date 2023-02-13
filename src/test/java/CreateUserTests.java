@@ -1,10 +1,14 @@
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 
 import com.github.javafaker.Faker;
 
+import api.CreateUser;
 import io.restassured.module.jsv.JsonSchemaValidator;
+import pojo.Location;
+import pojo.User;
 
-import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import java.time.Instant;
@@ -15,20 +19,18 @@ import java.util.Random;
 public class CreateUserTests {
 
         Faker fake = new Faker();
+        SoftAssertions softly = new SoftAssertions();
 
         @Test
         void verifyThatASuccessfulRequestBasicDataReturnsA200StatusCode() {
-                given()
-                                .header("app-id", "63d1caa3480870720570afb7")
-                                .header("Content-Type", "application/json")
-                                .body("{\n\"lastName\":\"" + fake.name().lastName()
-                                                + "\",\n\"firstName\":\"" + fake.name().firstName()
-                                                + "\",\n\"email\":\"" + fake.internet().safeEmailAddress() + "\"\n}")
-                                .post("https://dummyapi.io/data/v1/user/create")
-                                .then()
-                                .statusCode(200)
-                                .body(JsonSchemaValidator.matchesJsonSchema(
-                                                new File("src/main/java/schema/GetUserByIdSchema.json")));
+                User user = new User();
+                user.setFirstName(fake.name().firstName());
+                user.setLastName(fake.name().lastName());
+                user.setEmail(fake.internet().safeEmailAddress());
+                CreateUser createUser = new CreateUser("63d1caa3480870720570afb7", user);
+
+                softly.assertThat(createUser.response().statusCode()).as("Status code").isEqualTo(200);
+                softly.assertAll();
         }
 
         @Test
@@ -44,55 +46,64 @@ public class CreateUserTests {
                 int randomItemFromGender = random.nextInt(gender.size());
                 String randomGender = gender.get(randomItemFromGender);
 
-                given()
-                                .header("app-id", "63d1caa3480870720570afb7")
-                                .header("Content-Type", "application/json")
-                                .body("{\n\"lastName\":\"" + fake.name().lastName()
-                                                + "\",\n\"firstName\":\"" + fake.name().firstName()
-                                                + "\",\n\"title\":\"" + randomTitle
-                                                + "\",\n\"gender\":\"" + randomGender
-                                                + "\",\n\"dateOfBirth\":\"" + dob
-                                                + "\",\n\"email\":\"" + fake.internet().safeEmailAddress()
-                                                + "\",\n\"picture\":\"" + fake.internet().image()
-                                                + "\",\n\"location\": \n {\"street\": \"" + fake.address().fullAddress()
-                                                + "\",\n\"city\": \"" + fake.address().cityName()
-                                                + "\",\n\"state\": \"" + fake.address().state()
-                                                + "\",\n\"country\": \"" + fake.address().country()
-                                                + "\",\n\"timezone\": \"" + fake.address().timeZone()
-                                                + "\"},\n\"phone\":\""
-                                                + fake.phoneNumber().cellPhone() + "\"\n}")
-                                .post("https://dummyapi.io/data/v1/user/create")
-                                .then()
-                                .statusCode(200)
-                                .body(JsonSchemaValidator.matchesJsonSchema(
-                                                new File("src/main/java/schema/GetUserByIdSchema.json")));
+                User user = new User();
+                Location location = new Location();
+                user.setTitle(randomTitle);
+                user.setFirstName(fake.name().firstName());
+                user.setLastName(fake.name().lastName());
+                user.setGender(randomGender);
+                user.setEmail(fake.internet().safeEmailAddress());
+                user.setDateOfBirth(dob);
+                user.setPhone(fake.phoneNumber().cellPhone());
+                user.setPicture(fake.internet().image());
+                location.setStreet(fake.address().fullAddress());
+                location.setCity(fake.address().city());
+                location.setState(fake.address().state());
+                location.setCountry(fake.address().country());
+                location.setTimezone(fake.address().timeZone());
+                user.setLocation(location);
+                CreateUser createUser = new CreateUser("63d1caa3480870720570afb7", user);
+                softly.assertThat(createUser.response().statusCode()).as("Status code").isEqualTo(200);
+                softly.assertAll();
+        }
+
+        @Test
+        void verifyThatResponseBodyMatchesJsonSchema() {
+                File userSchema = new File("src/main/java/schema/GetUserByIdSchema.json");
+                User user = new User();
+                user.setFirstName(fake.name().firstName());
+                user.setLastName(fake.name().lastName());
+                user.setEmail(fake.internet().safeEmailAddress());
+                CreateUser createUser = new CreateUser("63d1caa3480870720570afb7", user);
+                assertThat(createUser.response().getBody().asString(),
+                                JsonSchemaValidator.matchesJsonSchema(userSchema));
         }
 
         @Test
         void verifyThatARequestWithAnExistentEmailAddressReturnsA400StatusCode() {
-                given()
-                                .header("app-id", "63d1caa3480870720570afb7")
-                                .header("Content-Type", "application/json")
-                                .body("{\n\"lastName\":\"" + fake.name().lastName()
-                                                + "\",\n\"firstName\":\"" + fake.name().firstName()
-                                                + "\",\n\"email\":\"lance.foster@example.com\"\n}")
-                                .post("https://dummyapi.io/data/v1/user/create")
-                                .then()
-                                .statusCode(400)
-                                .body(JsonSchemaValidator.matchesJsonSchema(
-                                                new File("src/main/java/schema/ErrorMessageSchema.json")));
+                File errorSchema = new File("src/main/java/schema/ErrorMessageSchema.json");
+                User user = new User();
+                user.setFirstName(fake.name().firstName());
+                user.setLastName(fake.name().lastName());
+                user.setEmail("lance.foster@example.com");
+                CreateUser createUser = new CreateUser("63d1caa3480870720570afb7", user);
+                softly.assertThat(createUser.response().statusCode()).as("Status code").isEqualTo(400);
+                softly.assertAll();
+                assertThat(createUser.response().getBody().asString(),
+                                JsonSchemaValidator.matchesJsonSchema(errorSchema));
         }
 
         @Test
         void verifyThatAnInvalidRequestReturnsA400StatusCode() {
-                given()
-                                .header("app-id", "63d1caa3480870720570afb7")
-                                .header("Content-Type", "application/json")
-                                .body("{\n\"lastName\":\"D\",\n\"firstName\":\"C\",\n\"email\":\"lance.foster\"\n}")
-                                .post("https://dummyapi.io/data/v1/user/create")
-                                .then()
-                                .statusCode(400)
-                                .body(JsonSchemaValidator.matchesJsonSchema(
-                                                new File("src/main/java/schema/ErrorMessageSchema.json")));
+                File errorSchema = new File("src/main/java/schema/ErrorMessageSchema.json");
+                User user = new User();
+                user.setFirstName("D");
+                user.setLastName("E");
+                user.setEmail("lance.foster@");
+                CreateUser createUser = new CreateUser("63d1caa3480870720570afb7", user);
+                softly.assertThat(createUser.response().statusCode()).as("Status code").isEqualTo(400);
+                softly.assertAll();
+                assertThat(createUser.response().getBody().asString(),
+                                JsonSchemaValidator.matchesJsonSchema(errorSchema));
         }
 }
