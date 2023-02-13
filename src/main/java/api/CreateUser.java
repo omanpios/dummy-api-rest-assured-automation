@@ -15,6 +15,7 @@ public class CreateUser {
         RequestSpecification request = given().log().all()
                 .baseUri(baseUri)
                 .header("app-id", appId)
+                .header("Content-Type", "application/json")
                 .body(body);
 
         response = request.when()
