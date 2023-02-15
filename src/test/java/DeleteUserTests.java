@@ -1,61 +1,56 @@
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 
 import com.github.javafaker.Faker;
 
+import api.CreateUser;
+import api.DeleteUser;
 import io.restassured.module.jsv.JsonSchemaValidator;
-import io.restassured.response.Response;
+import pojo.User;
 
-import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 
 public class DeleteUserTests {
 
-    Faker fake = new Faker();
+        Faker fake = new Faker();
+        SoftAssertions softly = new SoftAssertions();
 
-    @Test
-    void verifyThatASuccessfulRequestReturnsA200StatusCode() {
-        Response newUser = given()
-                .header("app-id", "63d1caa3480870720570afb7")
-                .header("Content-Type", "application/json")
-                .body("{\n\"lastName\":\"" + fake.name().lastName()
-                        + "\",\n\"firstName\":\"" + fake.name().firstName()
-                        + "\",\n\"email\":\"" + fake.internet().safeEmailAddress() + "\"\n}")
-                .post("https://dummyapi.io/data/v1/user/create")
-                .then()
-                .statusCode(200)
-                .extract()
-                .response();
+        @Test
+        void verifyThatASuccessfulRequestReturnsA200StatusCode() {
+                User user = new User();
+                user.setLastName(fake.name().lastName());
+                user.setFirstName(fake.name().firstName());
+                user.setEmail(fake.internet().safeEmailAddress());
+                CreateUser createUser = new CreateUser("63d1caa3480870720570afb7", user);
+                String userId = createUser.userResponse().getId();
 
-        String userId = newUser.path("id").toString();
+                DeleteUser deleteUser = new DeleteUser("63d1caa3480870720570afb7", userId);
+                softly.assertThat(deleteUser.response().statusCode()).as("Status code").isEqualTo(200);
+                softly.assertThat(deleteUser.deleteResponse().getId()).as("User id").isEqualTo(userId);
+                softly.assertAll();
+                assertThat(deleteUser.response().getBody().asString(), JsonSchemaValidator
+                                .matchesJsonSchema(new File("src/main/java/schema/StringSchema.json")));
+        }
 
-        given()
-                .header("app-id", "63d1caa3480870720570afb7")
-                .header("Content-Type", "application/json")
-                .delete("https://dummyapi.io/data/v1/user/" + userId)
-                .then()
-                .statusCode(200)
-                .body(JsonSchemaValidator.matchesJsonSchema(new File("src/main/java/schema/StringSchema.json")));
-    }
+        @Test
+        void verifyThatARequestWithANonExistentUserIdReturnsA404StatusCode() {
+                DeleteUser deleteUser = new DeleteUser("63d1caa3480870720570afb7", "63ece0dad4d358a2b21af587");
+                softly.assertThat(deleteUser.response().statusCode()).as("Status code").isEqualTo(404);
+                softly.assertThat(deleteUser.error().getError()).as("Error message").isEqualTo("RESOURCE_NOT_FOUND");
+                softly.assertAll();
+                assertThat(deleteUser.response().getBody().asString(), JsonSchemaValidator
+                                .matchesJsonSchema(new File("src/main/java/schema/ErrorMessageSchema.json")));
+        }
 
-    @Test
-    void verifyThatARequestWithANonExistentUserIdReturnsA404StatusCode() {
-
-        given()
-                .header("app-id", "63d1caa3480870720570afb7")
-                .header("Content-Type", "application/json")
-                .delete("https://dummyapi.io/data/v1/user/" + "63e39acb1b7900706240b6a9")
-                .then()
-                .statusCode(404)
-                .body(JsonSchemaValidator.matchesJsonSchema(new File("src/main/java/schema/ErrorMessageSchema.json")));
-    }
-
-    @Test
-    void verifyThatAnInvalidAuthenticationReturnsA403StatusCode() {
-        given().header("app-id", "63d1caa34808707205700000")
-                .header("Content-Type", "application/json")
-                .delete("https://dummyapi.io/data/v1/user/" + "63e39acb1b7900706240b6a9")
-                .then().statusCode(403)
-                .body(JsonSchemaValidator.matchesJsonSchema(new File("src/main/java/schema/ErrorMessageSchema.json")));
-    }
+        @Test
+        void verifyThatAnInvalidAuthenticationReturnsA403StatusCode() {
+                DeleteUser deleteUser = new DeleteUser("null", "User Id");
+                softly.assertThat(deleteUser.response().statusCode()).as("Status code").isEqualTo(403);
+                softly.assertThat(deleteUser.error().getError()).as("Error message").isEqualTo("APP_ID_NOT_EXIST");
+                softly.assertAll();
+                assertThat(deleteUser.response().getBody().asString(), JsonSchemaValidator
+                                .matchesJsonSchema(new File("src/main/java/schema/ErrorMessageSchema.json")));
+        }
 }
