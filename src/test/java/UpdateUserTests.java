@@ -8,7 +8,6 @@ import io.restassured.module.jsv.JsonSchemaValidator;
 import pojo.Location;
 import pojo.User;
 
-import static io.restassured.RestAssured.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
