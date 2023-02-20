@@ -20,13 +20,16 @@ public class CreateUserTests {
 
         Faker fake = new Faker();
         SoftAssertions softly = new SoftAssertions();
-        String appId = System.getenv("APPID");
+        String appId = System.getenv("appId");
         
 
         @Test
         void verifyThatASuccessfulRequestBasicDataReturnsA200StatusCode() {
                 User user = new User();
-                user.setFirstName(fake.name().firstName());
+                user.setFirstName("Omar");
+                System.out.print("Debug appid: " + appId);
+
+                System.out.println(user.getFirstName());
                 user.setLastName(fake.name().lastName());
                 user.setEmail(fake.internet().safeEmailAddress());
                 CreateUser createUser = new CreateUser(appId, user);
