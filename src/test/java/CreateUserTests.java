@@ -20,6 +20,7 @@ public class CreateUserTests {
 
         Faker fake = new Faker();
         SoftAssertions softly = new SoftAssertions();
+        String appId = System.getenv("APP_ID");
 
         @Test
         void verifyThatASuccessfulRequestBasicDataReturnsA200StatusCode() {
