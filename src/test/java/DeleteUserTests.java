@@ -16,6 +16,7 @@ public class DeleteUserTests {
 
         Faker fake = new Faker();
         SoftAssertions softly = new SoftAssertions();
+        String appId = System.getenv("APP_ID");
 
         @Test
         void verifyThatASuccessfulRequestReturnsA200StatusCode() {
@@ -23,10 +24,10 @@ public class DeleteUserTests {
                 user.setLastName(fake.name().lastName());
                 user.setFirstName(fake.name().firstName());
                 user.setEmail(fake.internet().safeEmailAddress());
-                CreateUser createUser = new CreateUser("63d1caa3480870720570afb7", user);
+                CreateUser createUser = new CreateUser(appId, user);
                 String userId = createUser.userResponse().getId();
 
-                DeleteUser deleteUser = new DeleteUser("63d1caa3480870720570afb7", userId);
+                DeleteUser deleteUser = new DeleteUser(appId, userId);
                 softly.assertThat(deleteUser.response().statusCode()).as("Status code").isEqualTo(200);
                 softly.assertThat(deleteUser.deleteResponse().getId()).as("User id").isEqualTo(userId);
                 softly.assertAll();
@@ -36,7 +37,7 @@ public class DeleteUserTests {
 
         @Test
         void verifyThatARequestWithANonExistentUserIdReturnsA404StatusCode() {
-                DeleteUser deleteUser = new DeleteUser("63d1caa3480870720570afb7", "63ece0dad4d358a2b21af587");
+                DeleteUser deleteUser = new DeleteUser(appId, "63ece0dad4d358a2b21af587");
                 softly.assertThat(deleteUser.response().statusCode()).as("Status code").isEqualTo(404);
                 softly.assertThat(deleteUser.error().getError()).as("Error message").isEqualTo("RESOURCE_NOT_FOUND");
                 softly.assertAll();
