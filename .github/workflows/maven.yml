@@ -19,7 +19,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env: 
-      APP_ID: ${{ secrets.APPI_ID }}
+      APP_ID: ${{ secrets.APP_ID }}
 
     steps:
     - uses: actions/checkout@v3

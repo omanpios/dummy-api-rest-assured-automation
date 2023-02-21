@@ -25,10 +25,12 @@ public class CreateUserTests {
         @Test
         void verifyThatASuccessfulRequestBasicDataReturnsA200StatusCode() {
                 User user = new User();
-                user.setFirstName(fake.name().firstName());
+                user.setFirstName("Omar");
                 user.setLastName(fake.name().lastName());
                 user.setEmail(fake.internet().safeEmailAddress());
-                CreateUser createUser = new CreateUser("63d1caa3480870720570afb7", user);
+                System.out.println(user.getFirstName());
+                System.out.println(appId);
+                CreateUser createUser = new CreateUser(appId, user);
 
                 softly.assertThat(createUser.response().statusCode()).as("Status code").isEqualTo(200);
                 softly.assertAll();
