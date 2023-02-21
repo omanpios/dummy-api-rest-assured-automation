@@ -20,6 +20,7 @@ public class CreateUserTests {
 
         Faker fake = new Faker();
         SoftAssertions softly = new SoftAssertions();
+        String appId = System.getenv("APP_ID");
 
         @Test
         void verifyThatASuccessfulRequestBasicDataReturnsA200StatusCode() {
@@ -27,7 +28,8 @@ public class CreateUserTests {
                 user.setFirstName(fake.name().firstName());
                 user.setLastName(fake.name().lastName());
                 user.setEmail(fake.internet().safeEmailAddress());
-                CreateUser createUser = new CreateUser("63d1caa3480870720570afb7", user);
+
+                CreateUser createUser = new CreateUser(appId, user);
 
                 softly.assertThat(createUser.response().statusCode()).as("Status code").isEqualTo(200);
                 softly.assertAll();
@@ -62,7 +64,7 @@ public class CreateUserTests {
                 location.setCountry(fake.address().country());
                 location.setTimezone(fake.address().timeZone());
                 user.setLocation(location);
-                CreateUser createUser = new CreateUser("63d1caa3480870720570afb7", user);
+                CreateUser createUser = new CreateUser(appId, user);
                 softly.assertThat(createUser.response().statusCode()).as("Status code").isEqualTo(200);
                 softly.assertAll();
         }
@@ -74,7 +76,7 @@ public class CreateUserTests {
                 user.setFirstName(fake.name().firstName());
                 user.setLastName(fake.name().lastName());
                 user.setEmail(fake.internet().safeEmailAddress());
-                CreateUser createUser = new CreateUser("63d1caa3480870720570afb7", user);
+                CreateUser createUser = new CreateUser(appId, user);
                 assertThat(createUser.response().getBody().asString(),
                                 JsonSchemaValidator.matchesJsonSchema(userSchema));
         }
@@ -86,7 +88,7 @@ public class CreateUserTests {
                 user.setFirstName(fake.name().firstName());
                 user.setLastName(fake.name().lastName());
                 user.setEmail("lance.foster@example.com");
-                CreateUser createUser = new CreateUser("63d1caa3480870720570afb7", user);
+                CreateUser createUser = new CreateUser(appId, user);
                 softly.assertThat(createUser.response().statusCode()).as("Status code").isEqualTo(400);
                 softly.assertAll();
                 assertThat(createUser.response().getBody().asString(),
@@ -100,7 +102,7 @@ public class CreateUserTests {
                 user.setFirstName("D");
                 user.setLastName("E");
                 user.setEmail("lance.foster@");
-                CreateUser createUser = new CreateUser("63d1caa3480870720570afb7", user);
+                CreateUser createUser = new CreateUser(appId, user);
                 softly.assertThat(createUser.response().statusCode()).as("Status code").isEqualTo(400);
                 softly.assertAll();
                 assertThat(createUser.response().getBody().asString(),
