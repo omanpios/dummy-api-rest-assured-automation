@@ -8,8 +8,8 @@ import io.restassured.module.jsv.JsonSchemaValidator;
 
 public class GetUserListTests {
     SoftAssertions softly = new SoftAssertions();
-    String appId = "63d1caa3480870720570afb7";
-
+    String appId = System.getenv("APP_ID");
+    
     @Test
     void verifyThatASuccessfulRequestReturnsA200StatusCode() {
         GetUserList getUserList = new GetUserList(null, null, appId);

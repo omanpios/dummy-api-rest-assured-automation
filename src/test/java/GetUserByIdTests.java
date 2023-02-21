@@ -9,7 +9,7 @@ import api.GetUserList;
 import io.restassured.module.jsv.JsonSchemaValidator;
 
 public class GetUserByIdTests {
-    String appId = "63d1caa3480870720570afb7";
+    String appId = System.getenv("APP_ID");
     SoftAssertions softly = new SoftAssertions();
 
     @Test
@@ -35,7 +35,7 @@ public class GetUserByIdTests {
 
     @Test
     void verifyThatANonExistentUserIdReturnsA404StatusCode() {
-        GetUser getUser = new GetUser(appId, "63d1caa3480870720570afb7");
+        GetUser getUser = new GetUser(appId, appId);
         softly.assertThat(getUser.response().statusCode()).as("Status code").isEqualTo(404);
         softly.assertThat(getUser.error().getError()).as("Validation error").isEqualTo("RESOURCE_NOT_FOUND");
         softly.assertAll();

@@ -19,6 +19,7 @@ import java.util.Random;
 public class UpdateUserTests {
         Faker fake = new Faker();
         SoftAssertions softly = new SoftAssertions();
+        String appId = System.getenv("APP_ID");
 
         @Test
         void verifyThatASuccessfulRequestReturnsA200StatusCode() {
@@ -49,7 +50,7 @@ public class UpdateUserTests {
                 user.setLocation(location);
                 user.setPhone(fake.phoneNumber().cellPhone());
 
-                UpdateUser updateUser = new UpdateUser("63d1caa3480870720570afb7", user, "60d0fe4f5311236168a10a2c");
+                UpdateUser updateUser = new UpdateUser(appId, user, "60d0fe4f5311236168a10a2c");
 
                 softly.assertThat(updateUser.response().statusCode()).as("Status code").isEqualTo(200);
                 softly.assertAll();
@@ -60,7 +61,7 @@ public class UpdateUserTests {
                 User user = new User();
                 user.setFirstName(fake.name().firstName());
 
-                UpdateUser updateUser = new UpdateUser("63d1caa3480870720570afb7", user, "60d0fe4f5311236168a10a2c");
+                UpdateUser updateUser = new UpdateUser(appId, user, "60d0fe4f5311236168a10a2c");
 
                 assertThat(updateUser.response().getBody().asString(), JsonSchemaValidator
                                 .matchesJsonSchema(new File("src/main/java/schema/GetUserByIdSchema.json")));
@@ -71,7 +72,7 @@ public class UpdateUserTests {
                 User user = new User();
                 user.setFirstName(fake.name().firstName());
 
-                UpdateUser updateUser = new UpdateUser("63d1caa3480870720570afb7", user, "60d0fe4f5311236168a10000");
+                UpdateUser updateUser = new UpdateUser(appId, user, "60d0fe4f5311236168a10000");
 
                 softly.assertThat(updateUser.response().statusCode()).as("Status code").isEqualTo(400);
                 softly.assertAll();
@@ -82,7 +83,7 @@ public class UpdateUserTests {
                 User user = new User();
                 user.setFirstName(fake.name().firstName());
 
-                UpdateUser updateUser = new UpdateUser("63d1caa3480870720570afb7", user, "60d0fe4f5311236168a10000");
+                UpdateUser updateUser = new UpdateUser(appId, user, "60d0fe4f5311236168a10000");
 
                 assertThat(updateUser.response().getBody().asString(), JsonSchemaValidator
                                 .matchesJsonSchema(new File("src/main/java/schema/ErrorMessageSchema.json")));
