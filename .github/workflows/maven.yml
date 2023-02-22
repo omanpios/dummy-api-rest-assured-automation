@@ -29,4 +29,13 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn site
+          - name: Download report 
+        uses: actions/download-artifact@v2
+        with:
+          path: './target/site'
+    - name: Upload report
+        uses: actions/upload-artifact@v2
+        with:
+          name: 'Test Report'
+          path: './target/site' 
 
