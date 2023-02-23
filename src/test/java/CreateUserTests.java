@@ -1,9 +1,14 @@
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.github.javafaker.Faker;
 
 import api.CreateUser;
+import io.restassured.RestAssured;
+import io.restassured.filter.log.ErrorLoggingFilter;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.module.jsv.JsonSchemaValidator;
 import pojo.Location;
 import pojo.User;
@@ -21,6 +26,11 @@ public class CreateUserTests {
         Faker fake = new Faker();
         SoftAssertions softly = new SoftAssertions();
         String appId = System.getenv("APP_ID");
+
+        @BeforeAll 
+        static void log(){
+                RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter(), new ErrorLoggingFilter());
+        }
 
         @Test
         void verifyThatASuccessfulRequestBasicDataReturnsA200StatusCode() {
