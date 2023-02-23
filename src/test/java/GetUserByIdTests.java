@@ -1,4 +1,5 @@
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -6,11 +7,20 @@ import java.io.File;
 
 import api.GetUser;
 import api.GetUserList;
+import io.restassured.RestAssured;
+import io.restassured.filter.log.ErrorLoggingFilter;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.module.jsv.JsonSchemaValidator;
 
 public class GetUserByIdTests {
     String appId = System.getenv("APP_ID");
     SoftAssertions softly = new SoftAssertions();
+
+    @BeforeAll
+    static void log() {
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter(), new ErrorLoggingFilter());
+    }
 
     @Test
     void verifyThatASuccessfulRequestReturnsA200StatusCode() {

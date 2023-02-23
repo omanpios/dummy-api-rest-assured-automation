@@ -12,7 +12,7 @@ public class UpdateUser {
     private final String baseUri = "https://dummyapi.io/data/v1";
 
     public UpdateUser(String appId, Object body, String userId) {
-        RequestSpecification request = given().log().all()
+        RequestSpecification request = given()
                 .baseUri(baseUri)
                 .header("app-id", appId)
                 .header("Content-Type", "application/json")
@@ -20,7 +20,7 @@ public class UpdateUser {
 
         response = request.when()
                 .put("/user/" + userId)
-                .then().log().all()
+                .then()
                 .extract()
                 .response();
     }

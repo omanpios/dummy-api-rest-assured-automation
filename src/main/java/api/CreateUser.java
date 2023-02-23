@@ -12,7 +12,7 @@ public class CreateUser {
     private final String baseUri = "https://dummyapi.io/data/v1";
 
     public CreateUser(String appId, Object body) {
-        RequestSpecification request = given().log().all()
+        RequestSpecification request = given()
                 .baseUri(baseUri)
                 .header("app-id", appId)
                 .header("Content-Type", "application/json")
@@ -20,7 +20,7 @@ public class CreateUser {
 
         response = request.when()
                 .post("/user/create")
-                .then().log().all()
+                .then()
                 .extract()
                 .response();
     }

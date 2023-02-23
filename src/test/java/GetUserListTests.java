@@ -1,15 +1,25 @@
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import api.GetUserList;
+import io.restassured.RestAssured;
+import io.restassured.filter.log.ErrorLoggingFilter;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.module.jsv.JsonSchemaValidator;
 
 public class GetUserListTests {
     SoftAssertions softly = new SoftAssertions();
     String appId = System.getenv("APP_ID");
-    
+
+    @BeforeAll
+    static void log() {
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter(), new ErrorLoggingFilter());
+    }
+
     @Test
     void verifyThatASuccessfulRequestReturnsA200StatusCode() {
         GetUserList getUserList = new GetUserList(null, null, appId);
@@ -33,7 +43,8 @@ public class GetUserListTests {
         softly.assertThat(getUserList.response().statusCode()).as("Status code").isEqualTo(403);
         softly.assertThat(getUserList.error().getError()).as("Validation error").isEqualTo("APP_ID_NOT_EXIST");
         softly.assertAll();
-        assertThat(getUserList.response().getBody().asString(), JsonSchemaValidator.matchesJsonSchema(errorMessageSchema));
+        assertThat(getUserList.response().getBody().asString(),
+                JsonSchemaValidator.matchesJsonSchema(errorMessageSchema));
     }
 
     @Test
