@@ -12,13 +12,13 @@ public class DeleteUser {
     private final String baseUri = "https://dummyapi.io/data/v1";
 
     public DeleteUser(String appId, String userId) {
-        RequestSpecification request = given().log().all()
+        RequestSpecification request = given()
                 .baseUri(baseUri)
                 .header("app-id", appId);
 
         response = request.when()
                 .delete("/user/" + userId)
-                .then().log().all()
+                .then()
                 .extract()
                 .response();
     }

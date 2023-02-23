@@ -13,7 +13,7 @@ public class GetUserList {
     private final String baseUri = "https://dummyapi.io/data/v1";
 
     public GetUserList(String page, String limit, String appId) {
-        RequestSpecification request = given().log().all()
+        RequestSpecification request = given()
                 .baseUri(baseUri)
                 .header("app-id", appId);
 
@@ -25,7 +25,7 @@ public class GetUserList {
         }
         response = request.when()
                 .get("/user")
-                .then().log().all()
+                .then()
                 .extract()
                 .response();
     }

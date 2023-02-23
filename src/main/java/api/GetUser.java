@@ -12,13 +12,13 @@ public class GetUser {
     private final String baseUri = "https://dummyapi.io/data/v1";
 
     public GetUser(String appId, String userId) {
-        RequestSpecification request = given().log().all()
+        RequestSpecification request = given()
                 .baseUri(baseUri)
                 .header("app-id", appId);
 
         response = request.when()
                 .get("/user/" + userId)
-                .then().log().all()
+                .then()
                 .extract()
                 .response();
     }
