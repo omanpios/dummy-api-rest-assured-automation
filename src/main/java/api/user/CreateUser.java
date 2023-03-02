@@ -1,30 +1,32 @@
-package api;
+package api.user;
 
 import static io.restassured.RestAssured.*;
 
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import pojo.DeletedUser;
-import pojo.Error;
+import pojo.user.User;
 
-public class DeleteUser {
+public class CreateUser {
+
     Response response;
     private final String baseUri = "https://dummyapi.io/data/v1";
 
-    public DeleteUser(String appId, String userId) {
+    public CreateUser(String appId, Object body) {
         RequestSpecification request = given()
                 .baseUri(baseUri)
-                .header("app-id", appId);
+                .header("app-id", appId)
+                .header("Content-Type", "application/json")
+                .body(body);
 
         response = request.when()
-                .delete("/user/" + userId)
+                .post("/user/create")
                 .then()
                 .extract()
                 .response();
     }
 
-    public DeletedUser deleteResponse() {
-        return response.getBody().as(DeletedUser.class);
+    public User userResponse() {
+        return response.getBody().as(User.class);
     }
 
     public Response response() {
@@ -34,4 +36,5 @@ public class DeleteUser {
     public Error error() {
         return response.getBody().as(Error.class);
     }
+
 }

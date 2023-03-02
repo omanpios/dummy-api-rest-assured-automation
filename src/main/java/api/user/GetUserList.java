@@ -1,32 +1,36 @@
-package api;
-
-import static io.restassured.RestAssured.*;
+package api.user;
 
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import pojo.Error;
-import pojo.User;
+import pojo.user.UserListResponse;
 
-public class UpdateUser {
+import static io.restassured.RestAssured.*;
+
+public class GetUserList {
     Response response;
     private final String baseUri = "https://dummyapi.io/data/v1";
 
-    public UpdateUser(String appId, Object body, String userId) {
+    public GetUserList(String page, String limit, String appId) {
         RequestSpecification request = given()
                 .baseUri(baseUri)
-                .header("app-id", appId)
-                .header("Content-Type", "application/json")
-                .body(body);
+                .header("app-id", appId);
 
+        if (page != null) {
+            request.queryParam("page", page);
+        }
+        if (limit != null) {
+            request.queryParam("limit", limit);
+        }
         response = request.when()
-                .put("/user/" + userId)
+                .get("/user")
                 .then()
                 .extract()
                 .response();
     }
 
-    public User userResponse() {
-        return response.getBody().as(User.class);
+    public UserListResponse userListResponse() {
+        return response.getBody().as(UserListResponse.class);
     }
 
     public Response response() {

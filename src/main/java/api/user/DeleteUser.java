@@ -1,30 +1,30 @@
-package api;
+package api.user;
+
+import static io.restassured.RestAssured.*;
 
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import pojo.Error;
-import pojo.User;
+import pojo.user.DeletedUser;
 
-import static io.restassured.RestAssured.given;
-
-public class GetUser {
+public class DeleteUser {
     Response response;
     private final String baseUri = "https://dummyapi.io/data/v1";
 
-    public GetUser(String appId, String userId) {
+    public DeleteUser(String appId, String userId) {
         RequestSpecification request = given()
                 .baseUri(baseUri)
                 .header("app-id", appId);
 
         response = request.when()
-                .get("/user/" + userId)
+                .delete("/user/" + userId)
                 .then()
                 .extract()
                 .response();
     }
 
-    public User userResponse() {
-        return response.getBody().as(User.class);
+    public DeletedUser deleteResponse() {
+        return response.getBody().as(DeletedUser.class);
     }
 
     public Response response() {

@@ -5,8 +5,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 
-import api.GetUser;
-import api.GetUserList;
+import api.user.GetUser;
+import api.user.GetUserList;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.ErrorLoggingFilter;
 import io.restassured.filter.log.RequestLoggingFilter;

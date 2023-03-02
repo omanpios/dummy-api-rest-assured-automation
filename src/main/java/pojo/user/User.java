@@ -1,4 +1,4 @@
-package pojo;
+package pojo.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

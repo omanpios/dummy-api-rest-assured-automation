@@ -1,25 +1,23 @@
-package api;
-
-import static io.restassured.RestAssured.*;
+package api.user;
 
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import pojo.User;
+import pojo.Error;
+import pojo.user.User;
 
-public class CreateUser {
+import static io.restassured.RestAssured.given;
 
+public class GetUser {
     Response response;
     private final String baseUri = "https://dummyapi.io/data/v1";
 
-    public CreateUser(String appId, Object body) {
+    public GetUser(String appId, String userId) {
         RequestSpecification request = given()
                 .baseUri(baseUri)
-                .header("app-id", appId)
-                .header("Content-Type", "application/json")
-                .body(body);
+                .header("app-id", appId);
 
         response = request.when()
-                .post("/user/create")
+                .get("/user/" + userId)
                 .then()
                 .extract()
                 .response();
@@ -36,5 +34,4 @@ public class CreateUser {
     public Error error() {
         return response.getBody().as(Error.class);
     }
-
 }
