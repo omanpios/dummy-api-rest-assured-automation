@@ -1,4 +1,4 @@
-package pojo.user;
+package pojo;
 
 import lombok.Data;
 
