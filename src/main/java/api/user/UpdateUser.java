@@ -4,8 +4,8 @@ import static io.restassured.RestAssured.*;
 
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import pojo.Error;
-import pojo.User;
+import pojo.user.Error;
+import pojo.user.User;
 
 public class UpdateUser {
     Response response;
