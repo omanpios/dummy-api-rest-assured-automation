@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import com.github.javafaker.Faker;
 
-import api.UpdateUser;
+import api.user.UpdateUser;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.ErrorLoggingFilter;
 import io.restassured.filter.log.RequestLoggingFilter;
