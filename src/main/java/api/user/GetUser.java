@@ -2,8 +2,8 @@ package api.user;
 
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import pojo.Error;
-import pojo.User;
+import pojo.user.Error;
+import pojo.user.User;
 
 import static io.restassured.RestAssured.given;
 

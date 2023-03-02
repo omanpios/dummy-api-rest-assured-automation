@@ -11,7 +11,7 @@ import io.restassured.filter.log.ErrorLoggingFilter;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.module.jsv.JsonSchemaValidator;
-import pojo.User;
+import pojo.user.User;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
