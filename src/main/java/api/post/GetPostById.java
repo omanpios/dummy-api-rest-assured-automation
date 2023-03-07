@@ -3,7 +3,6 @@ package api.post;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import pojo.Error;
-import pojo.post.PostListResponse;
 import pojo.post.Posts;
 
 import static io.restassured.RestAssured.given;
