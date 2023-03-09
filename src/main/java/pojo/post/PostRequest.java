@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CreatePost {
+public class PostRequest {
     private String text;
     private String image;
     private int likes;
